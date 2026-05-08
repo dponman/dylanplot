@@ -318,22 +318,7 @@ class CorrelationFromCovariance(VariableBase):
             raise ValueError("PrebinnedDensityVariable requires a PrebinnedOperationProtocol cut")
 
         evaluated = self._var.evaluate(dataset, cut)
-        print("evaluated...")
-        if isinstance(evaluated, tuple):
-            print("\t", evaluated[0].shape, evaluated[1].shape)
-            print("\t", np.sum(evaluated[0]), np.sum(evaluated[1]))
-        else:
-            print("\t", evaluated.shape)
-            print("\t", np.sum(evaluated))
-
         hist, cov, _, _ = maybe_valcov_to_definitely_valcov(evaluated)
-
-        if hist is not None:
-            print("hist shape:", hist.shape)
-            print("hist sum:", np.sum(hist))   
-        if cov is not None:
-            print("cov shape:", cov.shape)
-            print("cov sum:", np.sum(cov))
 
         if cov is None:
             raise RuntimeError("CorrelationFromCovariance needs covariance!!")
@@ -358,9 +343,7 @@ class CorrelationFromCovariance(VariableBase):
         
         outer[outer==0] = 1 #avoid divide by zero
 
-        print("BEFORE:", cov.sum())
         correl = cov/outer
-        print("AFTER:", correl.sum())
 
         if hist is not None:
             vals = hist/errs 
@@ -454,16 +437,17 @@ def strip_variable(variable : PrebinnedVariableProtocol) -> Tuple[PrebinnedVaria
     if isinstance(variable, BasicPrebinnedVariable):
         return variable, {}
     elif isinstance(variable, WithJacobian):
-        print("Stripping jacobian from variable")
+        print("[Info] Stripping jacobian from variable")
         subvar, details = strip_variable(variable._var)
         details['jac_details'] = variable.jac_details
         return subvar, details
     elif isinstance(variable, NormalizePerBlock):
-        print("Stripping NormalizePerBlock from variable")
+        print("[Info] Stripping NormalizePerBlock from variable")
         subvar, details = strip_variable(variable._var)
         details['normalized_blocks'] = variable.normalized_blocks
         return subvar, details
     elif isinstance(variable, DivideOutProfile):
+        print("[Info] Stripping DivideOutProfile from variable")
         subvar, details = strip_variable(variable._var)
         details['profiled_blocks'] = variable.normalized_blocks
         return subvar, details
@@ -472,7 +456,7 @@ def strip_variable(variable : PrebinnedVariableProtocol) -> Tuple[PrebinnedVaria
 
 def strip_correlation_from_variable(variable : PrebinnedVariableProtocol) -> PrebinnedVariableProtocol:
     if isinstance(variable, CorrelationFromCovariance):
-        print("Stripping CorrelationFromCovariance from variable")
+        print("[Info] Stripping CorrelationFromCovariance from variable")
         return variable._var
     elif hasattr(variable, '_var'):
         variable._var = strip_correlation_from_variable(variable._var) # type: ignore
