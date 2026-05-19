@@ -14,7 +14,11 @@ import matplotlib.axes
 from simonplot.util.comparison import ComparisonHistStruct
 from simonpy.AbitraryBinning import ArbitraryBinning
 
-from typing import List, Union, override
+from typing import List, Union
+try:
+    from typing import override
+except ImportError:
+    def override(f): return f
 
 from .DatasetBase import SingleDatasetBase, DatasetStackBase, DatasetComparisonBase
 from simonplot.typing.Protocols import BaseDatasetProtocol

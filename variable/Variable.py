@@ -5,7 +5,11 @@ from simonplot.util.profile import ProfileStruct
 from simonplot.util.rate import RateStruct
 from .VariableBase import VariableBase
 
-from typing import Any, List, Sequence, assert_never, override
+from typing import Any, List, Sequence, assert_never
+try:
+    from typing import override
+except ImportError:
+    def override(f): return f
 import awkward as ak
 import numpy as np
 

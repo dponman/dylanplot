@@ -5,7 +5,11 @@ from simonpy.AbitraryBinning import ArbitraryGenRecoBinning
 from simonpy.sanitization import maybe_valcov_to_definitely_valcov
 from simonpy.stats_v2 import apply_jacobian, divide_out_profile, normalize_per_block
 from .VariableBase import VariableBase
-from typing import Sequence, Tuple, assert_never, override, List
+from typing import Sequence, Tuple, assert_never, List
+try:
+    from typing import override
+except ImportError:
+    def override(f): return f
 import numpy as np
 
 class BasicPrebinnedVariable(VariableBase):

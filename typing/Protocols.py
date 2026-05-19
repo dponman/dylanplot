@@ -148,7 +148,7 @@ class PrebinnedBinningProtocol(BaseBinningProtocol, Protocol):
                              cut : PrebinnedOperationProtocol) -> ArbitraryBinning:
         ...
 
-type AnyBinningProtocol = AutoBinningProtocol | DefaultBinningProtocol | BasicBinningProtocol | PrebinnedBinningProtocol
+AnyBinningProtocol = AutoBinningProtocol | DefaultBinningProtocol | BasicBinningProtocol | PrebinnedBinningProtocol
 
 class HistplotMode(IntEnum):
     ERRORBAR = 0
@@ -294,4 +294,4 @@ class PrebinnedDatasetProtocol(BaseDatasetProtocol, PrebinnedDatasetAccessProtoc
     def quantitytype(self) -> str:
         ...
 
-type AnyDatasetProtocol = PrebinnedDatasetAccessProtocol | UnbinnedDatasetAccessProtocol
+AnyDatasetProtocol = PrebinnedDatasetAccessProtocol | UnbinnedDatasetAccessProtocol
