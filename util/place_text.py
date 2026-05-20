@@ -53,7 +53,12 @@ def get_other_objects(ax) -> tuple[list[Path], list[Any], list[Bbox]]:
 
     for artist in ax.get_children():
         #skip some things on purpose
-        if isinstance(artist, mplhep.label.ExpText) or isinstance(artist, mplhep.label.ExpSuffix) or isinstance(artist, mplhep.label.SuppText):
+        _skip_types = tuple(filter(None, [
+            getattr(mplhep.label, 'ExpText', None),
+            getattr(mplhep.label, 'ExpSuffix', None),
+            getattr(mplhep.label, 'SuppText', None),
+        ]))
+        if _skip_types and isinstance(artist, _skip_types):
             continue
         elif isinstance(artist, matplotlib.axis.Axis):
             continue
