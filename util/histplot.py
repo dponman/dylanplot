@@ -8,10 +8,9 @@ from simonplot.util.rate import RateHistStruct
 from simonpy.AbitraryBinning import ArbitraryBinning
 
 def _call_errorbar(ax, x, y, xerr, yerr, **kwargs):
-    
     return ax.errorbar(
-        x, y, xerr = xerr, yerr = yerr,
-        fmt = 'o', markersize=4, capsize=1, 
+        x, y, yerr=yerr,
+        fmt='-', markersize=0, capsize=2, linewidth=1,
         **kwargs
     )
 

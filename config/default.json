@@ -29,7 +29,8 @@
         "pt" : "$p_{T}$ [GeV]",
         "eta" : "$\\eta$",
         "phi" : "$\\phi$",
-        "r" : "$r$"
+        "Jpt" : "Z $p_{T}$ [GeV]",
+        "R" : "$\\Delta R$"
     },
     "auto_logx_patterns" : [
         "*pt",
