@@ -275,7 +275,7 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
                 continue
 
             _, ratiovals, ratioerrs = d.plot_hist_ratio(
-                Hnom, Hs[i],
+                Hs[i], Hnom,
                 axis[i],
                 density = density,
                 ax = ax_pad, # pyright: ignore[reportPossiblyUnboundVariable]
@@ -292,7 +292,10 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
             if np.sum(ratiomask) == 0:
                 ratiothreshold = np.nanmin(ratioerrs) + 1e-6
                 ratiomask = ratioerrs < ratiothreshold
-            
+
+            if np.sum(ratiomask) == 0:
+                continue
+
             largest_nontrivial_ratio = max(
                 largest_nontrivial_ratio,
                 np.nanmax(ratiovals[ratiomask])

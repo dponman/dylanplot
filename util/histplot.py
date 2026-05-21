@@ -8,11 +8,11 @@ from simonplot.util.rate import RateHistStruct
 from simonpy.AbitraryBinning import ArbitraryBinning
 
 def _call_errorbar(ax, x, y, xerr, yerr, **kwargs):
-    return ax.errorbar(
-        x, y, yerr=yerr,
-        fmt='-', markersize=0, capsize=2, linewidth=1,
-        **kwargs
-    )
+    edges = np.concatenate([[x[0] - xerr[0]], x + xerr])
+    artist = ax.stairs(y, edges, fill=False, linewidth=1, **kwargs)
+    color = artist.get_edgecolor()
+    ax.errorbar(x, y, yerr=yerr, fmt='none', capsize=2, linewidth=0.7, color=color)
+    return artist
 
 def _call_stairs(ax, edges, plotvals, fillbetween, **kwargs):
     return ax.stairs(

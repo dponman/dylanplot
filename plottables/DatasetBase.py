@@ -148,7 +148,7 @@ class DatasetBase(ABC):
                     own_style : bool,
                     **mpl_kwargs):
         
-        if own_style:
+        if own_style and 'color' not in mpl_kwargs:
             mpl_kwargs['color'] = self.color
 
         return call_histplot_ratio_function(
