@@ -264,14 +264,7 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
     if do_ratiopad:
         Hnom = Hs[which_ref]
 
-        if pulls:
-            largest_nontrivial_ratio = 0.0
-            smallest_nontrivial_ratio = 0.0
-        else:
-            largest_nontrivial_ratio = 1.0
-            smallest_nontrivial_ratio = 1.0
-
-        maxthreshold = 0.0
+        all_ratiovals = []
 
         for i, d in enumerate(dataset):
             if i == which_ref:
@@ -287,37 +280,18 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
                 pulls = pulls
             )
 
-            basemask = np.isfinite(ratiovals)
-            ratiothreshold = np.nanpercentile(ratioerrs[basemask], config['ratiopad']['auto_ylim']['percentile']) 
-            ratiothreshold = max(ratiothreshold, config['ratiopad']['auto_ylim']['min_threshold'])
-
-            ratiomask = (ratioerrs < ratiothreshold) & basemask
-            if np.sum(ratiomask) == 0:
-                ratiothreshold = np.nanmin(ratioerrs) + 1e-6
-                ratiomask = ratioerrs < ratiothreshold
-
-            if np.sum(ratiomask) == 0:
+            basemask = np.isfinite(ratiovals) & np.isfinite(ratioerrs)
+            if np.sum(basemask) == 0:
                 continue
 
-            largest_nontrivial_ratio = max(
-                largest_nontrivial_ratio,
-                np.nanmax(ratiovals[ratiomask])
-            )
+            all_ratiovals.append(ratiovals[basemask])
 
-            smallest_nontrivial_ratio = min(
-                smallest_nontrivial_ratio,
-                np.nanmin(ratiovals[ratiomask])
-            )
-
-            maxthreshold = max(maxthreshold, ratiothreshold)
-
-        pad = config['ratiopad']['auto_ylim']['padding'] + maxthreshold
-        original_ylim = ax_pad.get_ylim()  # pyright: ignore[reportPossiblyUnboundVariable]
-
-        ax_pad.set_ylim( # pyright: ignore[reportPossiblyUnboundVariable]
-            max(smallest_nontrivial_ratio - pad, original_ylim[0]),
-            min(largest_nontrivial_ratio + pad, original_ylim[1])
-        )
+        if all_ratiovals:
+            combined = np.concatenate(all_ratiovals)
+            ylo = np.percentile(combined, 5)
+            yhi = np.percentile(combined, 95)
+            pad = max(0.05, 0.1 * (yhi - ylo))
+            ax_pad.set_ylim(ylo - pad, yhi + pad)  # pyright: ignore[reportPossiblyUnboundVariable]
         
         if isinstance(axis[0], ArbitraryBinning) and axis[0].Nax == 1 and axis[0].label_lookup() is not None:
             pass
