@@ -1,5 +1,3 @@
-from ast import TypeVar
-from h11 import Data
 import numpy as np
 import awkward as ak
 
