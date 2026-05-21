@@ -234,6 +234,8 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
     else:
         add_cms_legend(ax_main, False)
 
+    _LINESTYLES = ['-', '--', ':', '-.']
+
     artists = []
     Hs = []
     for i, (v, c, w, d, l) in enumerate(zip(variable, cut, weight, dataset, labels)):
@@ -241,11 +243,12 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
             nolegend = False #force legend if dataset has label
 
         artist, H = d.plot_hist(
-            v, c, w, axis[i], 
-            density, ax_main, 
+            v, c, w, axis[i],
+            density, ax_main,
             style_from_dset or (not d.isMC),
             label=l,
             mode = HistplotMode.STACK if (d.is_stack and resolve_stack == i) else HistplotMode.ERRORBAR,
+            linestyle=_LINESTYLES[i % len(_LINESTYLES)],
         )
         artists.append(artist)
         Hs.append(H)
@@ -361,10 +364,9 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
 
                 if len(labels) == 2:
                     numlabel = alllabels[1][len(common_prefix):]
-
-                    pad_ylabel = ('%s/%s'%(denomlabel, numlabel))
+                    pad_ylabel = ('%s/%s' % (numlabel, denomlabel))
                 else:
-                    pad_ylabel =('%s/MC' % denomlabel) 
+                    pad_ylabel = ('Ratio to %s' % denomlabel)
 
                 pad_ylabel =pad_ylabel + extra_ylabel
 

@@ -9,6 +9,8 @@ from simonpy.AbitraryBinning import ArbitraryBinning
 
 def _call_errorbar(ax, x, y, xerr, yerr, **kwargs):
     edges = np.concatenate([[x[0] - xerr[0]], x + xerr])
+    if kwargs.get('color') is None:
+        kwargs.pop('color', None)  # let matplotlib cycle colors instead of defaulting to black
     artist = ax.stairs(y, edges, fill=False, linewidth=1, **kwargs)
     color = artist.get_edgecolor()
     ax.errorbar(x, y, yerr=yerr, fmt='none', capsize=2, linewidth=0.7, color=color)
