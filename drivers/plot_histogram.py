@@ -276,7 +276,7 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
                 density = density,
                 ax = ax_pad, # pyright: ignore[reportPossiblyUnboundVariable]
                 own_style = style_from_dset,
-                color = get_artist_color(artists[i]),
+                color = dataset[i].color,
                 pulls = pulls
             )
 

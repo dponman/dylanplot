@@ -65,12 +65,16 @@ class ProjectionOperation(PrebinnedOperationBase):
         return result
 
 class SliceOperation(PrebinnedOperationBase):
-    def __init__(self, 
+    def __init__(self,
                  edges : dict[str, Sequence],
-                 clipemptyflow : Sequence[str]):
-        
+                 clipemptyflow : Sequence[str],
+                 label_axes : Sequence[str] | None = None,
+                 label_overrides : dict[str, str] | None = None):
+
         self._edges = edges
         self._clipemptyflow = clipemptyflow
+        self._label_axes = label_axes
+        self._label_overrides = label_overrides or {}
 
     @property
     def key(self):
@@ -91,9 +95,14 @@ class SliceOperation(PrebinnedOperationBase):
     def _auto_label(self):
         texts = []
         for name, edges in self._edges.items():
+            if self._label_axes is not None and name not in self._label_axes:
+                continue
             low = edges[0]
             high = edges[1]
-            label = strip_units(lookup_axis_label(name))
+            if name in self._label_overrides:
+                label = self._label_overrides[name]
+            else:
+                label = strip_units(lookup_axis_label(name))
             if low == -np.inf:
                 texts.append('%s $< %0.3g$' % (label, high))
             elif high == np.inf:
