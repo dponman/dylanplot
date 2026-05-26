@@ -271,7 +271,7 @@ def plot_histogram(variable_: Union[VariableProtocol, List[VariableProtocol]],
                 continue
 
             _, ratiovals, ratioerrs = d.plot_hist_ratio(
-                Hs[i], Hnom,
+                Hnom, Hs[i],
                 axis[i],
                 density = density,
                 ax = ax_pad, # pyright: ignore[reportPossiblyUnboundVariable]

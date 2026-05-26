@@ -52,14 +52,14 @@ def add_cms_legend(ax, isdata: bool, lumi: Union[float, None]=None):
         return
     
     if isdata:
-        hep.cms.label(ax=ax, data=True, 
-                      lumi='%0.2f'%lumi,
+        hep.cms.label(ax=ax, data=True,
+                      lumi='%.3f'%lumi,
                       year= config.get('year', None),
                       com = config.get('com', None),
-                      label=config['cms_label'])
+                      text=config['cms_label'])
     else:
-        hep.cms.label(ax=ax, data=False, 
-                      label=config['cms_label'])
+        hep.cms.label(ax=ax, data=False,
+                      text=config['cms_label'])
         
 def savefig(fig, path: str, mkdir : bool=True):
     if mkdir:
@@ -343,6 +343,8 @@ def add_text(ax : matplotlib.axes.Axes,
 
 def get_artist_color(artist : Union[matplotlib.container.ErrorbarContainer, matplotlib.patches.Patch, matplotlib.lines.Line2D]):
     if isinstance(artist, matplotlib.patches.Patch):
+        if not artist.get_fill():
+            return artist.get_edgecolor()
         return artist.get_facecolor()
     elif isinstance(artist, matplotlib.container.ErrorbarContainer):
         return get_artist_color(artist.lines[0])
