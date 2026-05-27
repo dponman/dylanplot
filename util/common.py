@@ -51,11 +51,15 @@ def add_cms_legend(ax, isdata: bool, lumi: Union[float, None]=None):
     if config['cms_label'] == '': # short circuit if cms_label is empty, since that means the user doesn't want a label at all
         return
 
-    hep.cms.label(config['cms_label'], ax=ax, data=False,
-                  year=config.get('year', None),
-                  com=config.get('com', None))
     if isdata and lumi is not None:
-        hep.cms.lumitext('%.3f fb$^{-1}$ (13 TeV)' % lumi, ax=ax)
+        hep.cms.label(config['cms_label'], ax=ax, data=True,
+                      lumi='%.3f' % lumi,
+                      year=config.get('year', None),
+                      com=config.get('com', 13))
+    else:
+        hep.cms.label(config['cms_label'], ax=ax, data=False,
+                      year=config.get('year', None),
+                      com=config.get('com', None))
         
 def savefig(fig, path: str, mkdir : bool=True):
     if mkdir:
